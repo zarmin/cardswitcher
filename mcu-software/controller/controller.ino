@@ -1,11 +1,11 @@
-const byte ADDR_BIT0 = 7;
-const byte ADDR_BIT1 = 6;
-const byte ADDR_BIT2 = 5;
-const byte ADDR_BIT3 = 4;
-const byte ACTIVITY_LED = 3;
-const byte ACTIVE_RESISTOR_APIN = 5;
+const char ADDR_BIT0 = 7;
+const char ADDR_BIT1 = 6;
+const char ADDR_BIT2 = 5;
+const char ADDR_BIT3 = 4;
+const char ACTIVITY_LED = 3;
+const char ACTIVE_RESISTOR_APIN = 5;
 
-const byte ADDR_MAX = 15;
+const char ADDR_MAX = 15;
 
 
 void(* resetFunc) (void) = 0; 
@@ -41,7 +41,7 @@ void errorDisplay() {
   delay(500);
 }
 
-bool setAddress(byte addr) {
+bool setAddress(char addr) {
   if (addr > ADDR_MAX) {
     return false;
   }
@@ -59,7 +59,7 @@ bool setAddress(byte addr) {
 //  1: if one device active
 //  2: if 2 or more device active
 //  -1: if something wrong happened
-byte checkActiveDevices() {
+char checkActiveDevices() {
   int val = analogRead(ACTIVE_RESISTOR_APIN); // 10 bit precision, 0 - 1023
 
   // nothing selected: pulled down to 0
@@ -82,12 +82,12 @@ byte checkActiveDevices() {
 void systemCheck() {
   digitalWrite(ACTIVITY_LED, HIGH);
   
-  byte activeDevices[16] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+  char activeDevices[16] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
   bool error = false;
   
   for (int i = 0; i <= ADDR_MAX; i++) {
     setAddress(i);
-    byte activeDevice = checkActiveDevices();
+    char activeDevice = checkActiveDevices();
 
     if (activeDevice == 0) {
       // no device found, skip
@@ -128,6 +128,10 @@ void systemCheck() {
   Serial.println("Ready to use!");
 }
 
+void prompt() {
+  Serial.print("Address? >> ");
+}
+
 void setup() {
   pinSetup();
 
@@ -135,18 +139,39 @@ void setup() {
   Serial.println("Serial init");
 
   systemCheck();
+
+  prompt();
 }
 
-void loop() {
-  Serial.print("Address? >> ");
+String inString = "";
+
+void loop() {    
+  char address = -1;
   
-  while (Serial.available() == 0) {
-    delay(10);
+  while (Serial.available() > 0) {
+    int inChar = Serial.read();    
+
+    if (isDigit(inChar)) {
+      Serial.print((char)inChar); // echo
+      inString += (char)inChar;
+    }    
+    if (inString.length() > 8) {
+      return;
+    }
+    if (inChar == '\n') {
+      address = (char)inString.toInt();
+      inString = "";
+      break; 
+    }
+  }
+  
+  if (address == -1) {
+    delay(5);
+    return;
   }
 
   digitalWrite(ACTIVITY_LED, HIGH);
-  
-  byte address = (byte)Serial.parseInt();
+
   Serial.println();
 
   if (address > ADDR_MAX) {
@@ -156,7 +181,7 @@ void loop() {
 
   setAddress(address);
 
-  byte activeDevice = checkActiveDevices();
+  char activeDevice = checkActiveDevices();
 
   if (activeDevice == 0) {
     Serial.print("Set to address (no active device): ");
@@ -173,4 +198,6 @@ void loop() {
   }
 
   digitalWrite(ACTIVITY_LED, LOW);
+
+  prompt();
 }  
