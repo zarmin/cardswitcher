@@ -18,11 +18,17 @@ Every shield have a 4 bit address, which can be changed by a dip switch on the b
 
 Card shields can't detect if they have an inserted card or not.
 
+### Card shield schematics
+
 ![Card shield schematics](/images/card_shield_diagram.png)
+
+### Card shield PCB
 
 ![Card shield PBC](/images/card_shield.png)
 
-_TODO: photo_
+### Card shield photos
+
+![Card shield photo](/photos/card_shield_01.jpg)
 
 ## Card controller
 
@@ -32,19 +38,31 @@ The card controller can be controller (and powered) via mini USB. It connects to
 
 It has an IC socket, initially designed to hold an ATMEGA168PA, with an Arduino software. The board also has a ISP connector to program the MCU.
 
+### Card controller schematics
+
 ![Card controller schematics](/images/card_ctrl_diagram.png)
+
+### Card controller PCB
 
 ![Card controller PCB](/images/card_ctrl_pcb.png)
 
-_TODO: photo_
+### Card controller photos
+
+![Card controller photo](/photos/card_controller_01.jpg)
+![Card controller photo](/photos/card_controller_02.jpg)
 
 ## Card adapter
 
 The card adapter is the _fake_ card, that goes into the real card slot.
 
+### Card adapter PCB
+
 ![Card adapter](/images/card_adapter_pcb.png)
 
-_TODO: photo_
+### Card adapter photos
+
+![Card adapter photo](/photos/card_adapter_01.jpg)
+![Card adapter photo](/photos/card_adapter_02.jpg)
 
 # Software
 
@@ -55,7 +73,27 @@ After the boot, it can be controlled via serial (via USB), by writing the addres
 
 # Photos
 
-_TODO photos_
+_Installation with two card shield modules and cards_
+
+![System with 2 cards](/photos/system_01.jpg)
+![System with 2 cards](/photos/system_02.jpg)
+![System with 2 cards](/photos/system_03.jpg)
+
+## Example terminal communication
+
+```
+Serial init
+Device found on address: 1
+Device found on address: 2
+Ready to use!
+Address? >>
+Set to address (no active device): 4
+Address? >>
+Set to address (active device): 1
+Address? >>
+Set to address (active device): 2
+Address? >>
+```
 
 # Components
 
