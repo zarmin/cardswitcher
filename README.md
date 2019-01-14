@@ -68,6 +68,8 @@ Special (non common / passive) components are:
 - card controller: 1x FT232BL FTDI IC
 - card controller: 1x ATMEGA168PA MCU
 
+Every other component can be found in bom folder, or can be exported from EAGLE files.
+
 # Isolation
 
 The device using a common fused (500 mA) ground between the USB and the smart card adapter (Smart card connector GND). 
