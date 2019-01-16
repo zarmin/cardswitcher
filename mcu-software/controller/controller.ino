@@ -151,14 +151,19 @@ void loop() {
   while (Serial.available() > 0) {
     int inChar = Serial.read();    
 
-    if (isDigit(inChar)) {
+    if (isDigit(inChar) || isAlpha(inChar)) {
       Serial.print((char)inChar); // echo
       inString += (char)inChar;
     }    
     if (inString.length() > 8) {
+      inString = "";
       return;
     }
-    if (inChar == '\n') {
+    if (inChar == '\n') {      
+      if (inString.equalsIgnoreCase("reset")) {
+        resetFunc();
+        return;
+      }
       address = (char)inString.toInt();
       inString = "";
       break; 
